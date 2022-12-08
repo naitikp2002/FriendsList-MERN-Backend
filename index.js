@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+  "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
   { useNewUrlParser: true }
 );
 

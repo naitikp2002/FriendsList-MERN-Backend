@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
+  "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/MERN?retryWrites=true&w=majority",
   { useNewUrlParser: true }
 );
 

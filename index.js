@@ -9,7 +9,8 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
+  "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+  // "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
   { useNewUrlParser: true }
 );
 
@@ -28,6 +29,22 @@ app.get("/read", async (req, res) => {
     if (err) res.send(err);
     else res.send(result);
   });
+});
+
+app.put("/update", async (req, res) => {
+  const newAge=req.body.newAge;
+  const id= req.body.id;
+
+  try {
+    await FriendModel.findById(id,(error, friendToUpdate)=>
+    {
+      friendToUpdate.age = Number(newAge);
+      friendToUpdate.save();
+    })
+  }catch (err) {
+    console.error(err);
+  }
+  res.send("Updated");
 });
 
 app.listen(process.env.PORT || 3001, () => {

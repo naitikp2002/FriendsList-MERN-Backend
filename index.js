@@ -9,30 +9,36 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("MERN").collection("friends");
-  // perform actions on the collection object
-  app.listen(PORT, () => {
-    console.log("listening on port");
-  });
-  client.close();
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+// const uri = "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+// client.connect(err => {
+//   const collection = client.db("MERN").collection("friends");
+//   if(err){ console.error(err); return false;}
+//   // perform actions on the collection object
+//   app.listen(PORT, () => {
+//     console.log("listening on port");
+//   });
+// });
+
+mongoose.connect(
+  // "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+  "mongodb+srv://naitikp2002:Naitik%40123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
+  { useNewUrlParser: true }
+);
+app.listen(PORT, () => {
+  console.log("listening on port");
 });
-
-// mongoose.connect(
-//   "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
-//   // "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
-//   { useNewUrlParser: true }
-// )
-
 app.post("/addfriend", async (req, res) => {
   const name = req.body.name;
-  const age= req.body.age;
-  const description= req.body.description; 
+  const age = req.body.age;
+  const description = req.body.description;
 
-  const friend = new FriendModel({ name: name, age: age, description: description});
+  const friend = new FriendModel({
+    name: name,
+    age: age,
+    description: description,
+  });
   await friend.save();
   res.send("INSERTED Data");
 });
@@ -45,24 +51,22 @@ app.get("/read", async (req, res) => {
 });
 
 app.put("/update", async (req, res) => {
-  const newAge=req.body.newAge;
-  const id= req.body.id;
+  const newAge = req.body.newAge;
+  const id = req.body.id;
 
   try {
-    await FriendModel.findById(id,(error, friendToUpdate)=>
-    {
+    await FriendModel.findById(id, (error, friendToUpdate) => {
       friendToUpdate.age = Number(newAge);
       friendToUpdate.save();
-    })
-  }catch (err) {
+    });
+  } catch (err) {
     console.error(err);
   }
   res.send("Updated");
 });
 
 app.delete("/delete:id", async (req, res) => {
-  const id= req.params.id;
+  const id = req.params.id;
   await FriendModel.findByIdAndRemove(id).exec();
   res.send("Removed");
 });
-

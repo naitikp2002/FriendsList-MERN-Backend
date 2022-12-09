@@ -47,6 +47,12 @@ app.put("/update", async (req, res) => {
   res.send("Updated");
 });
 
+app.delete("/delete:id", async (req, res) => {
+  const id= req.params.id;
+  await FriendModel.findByIdAndRemove(id).exec();
+  res.send("Removed");
+});
+
 app.listen(process.env.PORT || 3001, () => {
   console.log("listening on port");
 });

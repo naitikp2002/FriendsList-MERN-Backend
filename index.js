@@ -1,18 +1,31 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const port = 3001;
+const PORT = process.env.PORT || 3001;
 const FriendModel = require("./models/Friends");
 const cors = require("cors");
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(
-  "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
-  // "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
-  { useNewUrlParser: true }
-);
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  app.listen(PORT, () => {
+    console.log("listening on port");
+  });
+  client.close();
+});
+
+// mongoose.connect(
+//   "mongodb://localhost:27017/MERN?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+//   // "mongodb+srv://naitikp2002:Naitik@123@mern.nczhkbo.mongodb.net/?retryWrites=true&w=majority",
+//   { useNewUrlParser: true }
+// )
 
 app.post("/addfriend", async (req, res) => {
   const name = req.body.name;
@@ -53,6 +66,3 @@ app.delete("/delete:id", async (req, res) => {
   res.send("Removed");
 });
 
-app.listen(process.env.PORT || 3001, () => {
-  console.log("listening on port");
-});
